@@ -28,7 +28,21 @@ describe('sortProductsByPrice', () => {
   test("товары [5, 2, 6] c 'desc' сортируются как [2, 5, 6]", () => {
     expect(getIds(sortProductsByPrice(pickProducts([5, 2, 6]), 'desc'))).toEqual([2, 5, 6]);
   });
-  test.todo("'asc' не меняет исходный массив [1, 3, 4]");
-  test.todo("'desc' не меняет исходный массив [1, 3, 4]");
-  test.todo('направление по умолчанию не меняет исходный массив всех товаров');
+
+  test("'asc' не меняет исходный массив [1, 3, 4]", () => {
+    const selected = pickProducts([1, 3, 4]);
+    sortProductsByPrice(selected, 'asc');
+    expect(getIds(selected)).toEqual([1, 3, 4]);
+  });
+
+  test("'desc' не меняет исходный массив [1, 3, 4]", () => {
+    const selected = pickProducts([1, 3, 4]);
+    sortProductsByPrice(selected, 'desc');
+    expect(getIds(selected)).toEqual([1, 3, 4]);
+  });
+
+  test('направление по умолчанию не меняет исходный массив всех товаров', () => {
+    sortProductsByPrice(products);
+    expect(getIds(products)).toEqual([1, 2, 3, 4, 5, 6]);
+  });
 });
