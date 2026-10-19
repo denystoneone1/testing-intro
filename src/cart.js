@@ -1,3 +1,9 @@
+const PROMO_CODE = 'SAVE10';
+const PROMO_DISCOUNT_RATE = 0.1;
+const PROMO_MIN_SUBTOTAL = 20000;
+const DELIVERY_PRICE = 30000;
+const FREE_DELIVERY_MIN_SUBTOTAL = 50000;
+
 function validateQuantity(quantity, stock) {
   if (!Number.isInteger(quantity) || quantity <= 0) {
     throw new RangeError('Количество должно быть положительным целым числом');
@@ -33,10 +39,19 @@ function calculateCartSubtotal(cart) {
   return cart.reduce((sum, { price, quantity }) => sum + price * quantity, 0);
 }
 
+function calculateDiscount(subtotal, promoCode) {
+  if (promoCode !== PROMO_CODE || subtotal < PROMO_MIN_SUBTOTAL) return 0;
+  return Math.round(subtotal * PROMO_DISCOUNT_RATE);
+}
+
+function calculateDelivery(subtotal) {
+  return subtotal < FREE_DELIVERY_MIN_SUBTOTAL ? DELIVERY_PRICE : 0;
+}
+
 function calculateOrderTotal(cart, promoCode = '') {
   const subtotal = calculateCartSubtotal(cart);
-  const discount = promoCode === 'SAVE10' && subtotal >= 20000 ? Math.round(subtotal * 0.1) : 0;
-  const delivery = subtotal < 50000 ? 30000 : 0;
+  const discount = calculateDiscount(subtotal, promoCode);
+  const delivery = calculateDelivery(subtotal);
 
   return { subtotal, discount, delivery, total: subtotal - discount + delivery };
 }
